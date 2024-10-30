@@ -21,7 +21,7 @@ const app = express();
 // CORS configuration
 const allowedOrigins = [
     'http://localhost:3000',
-    'https://ecom-final-fixed.vercel.app'
+    'https://sagar-das-ecom-project.vercel.app/'
 ];
 
 const corsOptions = {
