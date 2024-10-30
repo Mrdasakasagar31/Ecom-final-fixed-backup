@@ -9,8 +9,7 @@ const Footer = () => {
         <Link className='down' to="/contact"> Contact</Link> |
         <Link className='down' to="/policy"> Policy</Link>
       </p>
-    <p>
-    </p>
+   <p className='text-center mt-3 up'>NOTE: This website is only for Practice...</p>
     </div>
   );
 };
