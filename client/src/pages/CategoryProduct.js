@@ -22,7 +22,7 @@ const CategoryProduct = () => {
 
     const getProductsByCat = async () => {
         try {
-            const { data } = await axios.get(`https://ecomfinal.onrender.com/api/v1/product/product-category/${params.slug}`);
+            const { data } = await axios.get(`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-category/${params.slug}`);
             setProducts(data?.products);
             setCategory(data?.category);
             setLoading(false); // Set loading to false after data is fetched
@@ -47,7 +47,7 @@ const CategoryProduct = () => {
                             products?.map((p) => (
                                 <div className="card m-3" style={{ width: "21rem", backgroundColor: "orange" }} key={p._id}>
                                     <img
-                                        src={`https://ecomfinal.onrender.com/api/v1/product/product-photo/${p._id}`}
+                                        src={`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-photo/${p._id}`}
                                         className="card-img-top"
                                         alt={p.name}
                                         style={{ width: "100%", height: '310px', transition: "transform 0.3s", objectFit: 'cover', padding: "1px" }}
