@@ -2,7 +2,6 @@ import cron from "cron";
 import https from "https";
 
 const URL = "https://ecom-final-fixed-backup.onrender.com/api/v1/category/get-category";
-
 const job = new cron.CronJob("*/14 * * * *", function () {
     https
         .get(URL, (res) => {
