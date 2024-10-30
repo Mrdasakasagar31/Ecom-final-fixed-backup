@@ -72,7 +72,7 @@ const UpdateProduct = () => {
             photo && productData.append("photo", photo);
             productData.append("category", category);
             const { data } = axios.put(
-                https://ecom-final-fixed-backup.onrender.com/api/v1/product/update-product/${id}`,
+                `https://ecom-final-fixed-backup.onrender.com/api/v1/product/update-product/${id}`,
                 productData
             );
             if (data?.success) {
