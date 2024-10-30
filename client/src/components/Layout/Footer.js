@@ -10,7 +10,7 @@ const Footer = () => {
         <Link className='down' to="/policy"> Policy</Link>
       </p>
     <p>
-    </p?
+    </p>
     </div>
   );
 };
