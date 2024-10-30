@@ -29,68 +29,47 @@
 // export default Users
 
 import React, { useEffect, useState } from 'react';
-import Layout from '../../components/Layout/Layout';
-import AdminMenu from '../../components/Layout/AdminMenu';
 import axios from 'axios';
-import { useAuth } from "../../context/auth";
+import { useAuth } from '../../context/auth'; // Import your useAuth hook
 
 const Users = () => {
-    const [auth] = useAuth();
+    const [auth] = useAuth(); // Retrieve the auth context
     const [users, setUsers] = useState([]);
-
-    // Fetch all users
-    const getUsers = async () => {
-        try {
-            const { data } = await axios.get("https://ecom-final-fixed-backup.onrender.com/api/v1/auth/all-users", {
-                headers: {
-                    Authorization: `Bearer ${auth.token}`
-                }
-            });
-            setUsers(data.users);
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (auth?.token) {
-            getUsers();
-        }
-    }, [auth?.token]);
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get("https://ecom-final-fixed-backup.onrender.com/api/v1/auth/all-users", {
+                    headers: {
+                        Authorization: `Bearer ${auth.token}`, // Use auth.token here
+                    },
+                });
+                setUsers(response.data.users);
+            } catch (err) {
+                console.error('Error fetching users:', err);
+                setError('Could not fetch users.');
+            }
+        };
+
+        fetchUsers();
+    }, [auth.token]); // Add auth.token as a dependency
+
+    if (error) {
+        return <p>{error}</p>;
+    }
 
     return (
-        <Layout title={"Dashboard - All Users Details"}>
-            <div className="container-fluid p-3">
-                <div className="row">
-                    <div className="col-lg-3 col-md-4">
-                        <AdminMenu />
-                    </div>
-                    <div className="col-lg-6 col-md-8 p-4">
-                        <h2 className="text-center">All Users</h2>
-                        <div className="table-responsive">
-                            <table className='table'>
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Address</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {users.map((user) => (
-                                        <tr key={user._id}>
-                                            <td>{user.name}</td>
-                                            <td>{user.email}</td>
-                                            <td>{user.address}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+        <div>
+            <h2>All Users</h2>
+            {users.map((user) => (
+                <div key={user._id} className="user-card">
+                    <p><strong>Name:</strong> {user.name}</p>
+                    <p><strong>Email:</strong> {user.email}</p>
+                    <p><strong>Address:</strong> {user.address}</p>
                 </div>
-            </div>
-        </Layout>
+            ))}
+        </div>
     );
 };
 
