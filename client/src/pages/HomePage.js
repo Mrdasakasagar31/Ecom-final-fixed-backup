@@ -6,6 +6,7 @@ import { Prices } from '../components/Prices';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/cart';
 import toast from 'react-hot-toast';
+import './HomePage.css'; // Import the CSS file for shimmer effect styles
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -18,7 +19,6 @@ const HomePage = () => {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
 
-    //get all categories
     const getAllCategory = async () => {
         try {
             const { data } = await axios.get("https://ecom-final-fixed-backup.onrender.com/api/v1/category/get-category");
@@ -35,7 +35,6 @@ const HomePage = () => {
         getTotal();
     }, []);
 
-    //get all products 
     const getAllProducts = async () => {
         try {
             setLoading(true);
@@ -48,7 +47,6 @@ const HomePage = () => {
         }
     };
 
-    //getTotal Count  
     const getTotal = async () => {
         try {
             const { data } = await axios.get('https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-count');
@@ -63,7 +61,6 @@ const HomePage = () => {
         LoadMore();
     }, [page]);
 
-    //load more
     const LoadMore = async () => {
         try {
             setLoading(true);
@@ -76,7 +73,6 @@ const HomePage = () => {
         }
     };
 
-    //filter by category
     const handleFilter = (value, id) => {
         let all = [...checked];
         if (value) {
@@ -95,7 +91,6 @@ const HomePage = () => {
         if (checked.length || radio.length) filterProduct();
     }, [checked, radio]);
 
-    //get filtered products 
     const filterProduct = async () => {
         try {
             const { data } = await axios.post('https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-filters', { checked, radio });
@@ -117,7 +112,6 @@ const HomePage = () => {
                         ))}
                     </div>
 
-                    {/* Filter by price  */}
                     <h4 className="text-center mt-4" style={{ color: "maroon", marginLeft: "-43px" }}>Filter By Price</h4>
                     <hr />
                     <div className="d-flex flex-column">
@@ -134,67 +128,56 @@ const HomePage = () => {
                 </div>
                 <div className="col-md-9 col-sm-12">
                     <h1 className="text-center mt-4">All Products</h1>
-                    <div style={{ position: 'relative', minHeight: '50vh' }}>
+                    <div className="product-list">
                         {loading && (
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', position: 'absolute', width: '100%', zIndex: 10 }}>
-                                <Spin size="large" style={{ fontSize: '5em' }} />
-                            </div>
+                            Array(8).fill(0).map((_, index) => (
+                                <div key={index} className="card loading-card m-2" />
+                            ))
                         )}
                         <div className={`d-flex flex-wrap justify-content-center ${loading ? 'opacity-50' : ''}`}>
-                          {products?.map((p) => (
-    <div key={p._id} className="card m-3" style={{ width: "18rem" }}>
-        <img
-            src={`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-photo/${p._id}`}
-            className="card-img-top"
-            alt={p.name}
-            style={{
-                width: '100%',
-                height: '250px', // Reduced height for the image
-                objectFit: 'cover',
-                padding: '1px',
-                borderRadius: "4px"
-            }}
-            onMouseOver={(e) => e.target.style.transform = 'scale(0.985)'}
-            onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
-        />
-        <hr style={{ margin: '0px', color: "gray" }} />
-        <div className="card-body" style={{
-            backgroundColor: 'orange',
-            borderRadius: "0 0 3px 3px",
-            padding: '15px' // Adjusted padding for a compact layout
-        }}>
-            <h5 className="card-title">{p.name}</h5>
-            <p className="card-text">
-                {p.description.substring(0, 50)}...
-            </p>
-            <h5 className="card-text" style={{ fontWeight: 'bold', color: 'black' }}>₹{p.price}</h5>
-
-            <div className='d-flex justify-content-between'>
-                <button className="btn btn-primary ms-1 mb-2" onClick={() => navigate(`/product/${p.slug}`)}>MORE DETAILS</button>
-
-                <button className="btn btn-success ms-3 mb-2" onClick={() => {
-                    setCart([...cart, p]);
-                    localStorage.setItem("cart", JSON.stringify([...cart, p]));
-                    toast.success('Item Added to Cart');
-                }}>ADD TO CART</button>
-            </div>
-        </div>
-    </div>
-))}
-
+                            {products?.map((p) => (
+                                <div key={p._id} className="card m-2" style={{ width: "16rem" }}>
+                                    <img
+                                        src={`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-photo/${p._id}`}
+                                        className="card-img-top"
+                                        alt={p.name}
+                                        style={{ width: '100%', height: '200px', objectFit: 'cover', padding: '1px', borderRadius: "4px" }}
+                                    />
+                                    <hr style={{ margin: '0px', color: "gray" }} />
+                                    <div className="card-body" style={{ backgroundColor: 'orange', borderRadius: "0 0 3px 3px" }}>
+                                        <h6 className="card-title" style={{ fontSize: '1rem' }}>{p.name}</h6>
+                                        <p className="card-text" style={{ fontSize: '0.85rem' }}>
+                                            {p.description.substring(0, 40)}...
+                                        </p>
+                                        <h6 className="card-text" style={{ fontWeight: 'bold', color: 'black', fontSize: '1rem' }}>₹{p.price}</h6>
+                                        <div className='d-flex justify-content-between'>
+                                            <button className="btn btn-primary ms-1 mb-2" style={{ fontSize: '0.85rem', padding: '5px 10px' }} onClick={() => navigate(`/product/${p.slug}`)}>
+                                                MORE DETAILS
+                                            </button>
+                                            <button className="btn btn-success ms-3 mb-2" style={{ fontSize: '0.85rem', padding: '5px 10px' }} onClick={() => {
+                                                setCart([...cart, p]);
+                                                localStorage.setItem("cart", JSON.stringify([...cart, p]));
+                                                toast.success('Item Added to Cart');
+                                            }}>
+                                                ADD TO CART
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    </div>
-                    <div>
-                        {products && products.length < total && (
-                            <div className="card m-2" style={{ width: "14rem", backgroundColor: 'transparent', border: 'none' }}>
-                                <button className='deshome btn btn-dark mb-5 mt-3 mx-auto' onClick={(e) => {
-                                    e.preventDefault();
-                                    setPage(page + 1);
-                                }}>
-                                    {loading ? "Loading..." : "Load More"}
-                                </button>
-                            </div>
-                        )}
+                        <div>
+                            {products && products.length < total && (
+                                <div className="card m-2" style={{ width: "14rem", backgroundColor: 'transparent', border: 'none' }}>
+                                    <button className='deshome btn btn-dark mb-5 mt-3 mx-auto' onClick={(e) => {
+                                        e.preventDefault();
+                                        setPage(page + 1);
+                                    }}>
+                                        {loading ? "Loading..." : "Load More"}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
