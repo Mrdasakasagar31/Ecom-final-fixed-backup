@@ -21,7 +21,7 @@ const HomePage = () => {
     //get all categories
     const getAllCategory = async () => {
         try {
-            const { data } = await axios.get("https://ecomfinal.onrender.com/api/v1/category/get-category");
+            const { data } = await axios.get("https://ecom-final-fixed-backup.onrender.com/api/v1/category/get-category");
             if (data?.success) {
                 setCategories(data?.category);
             }
@@ -39,7 +39,7 @@ const HomePage = () => {
     const getAllProducts = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(`https://ecomfinal.onrender.com/api/v1/product/product-list/${page}`);
+            const { data } = await axios.get(`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-list/${page}`);
             setLoading(false);
             setProducts(data.products);
         } catch (error) {
@@ -51,7 +51,7 @@ const HomePage = () => {
     //getTotal Count  
     const getTotal = async () => {
         try {
-            const { data } = await axios.get('https://ecomfinal.onrender.com/api/v1/product/product-count');
+            const { data } = await axios.get('https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-count');
             setTotal(data?.total);
         } catch (error) {
             console.log(error);
@@ -67,7 +67,7 @@ const HomePage = () => {
     const LoadMore = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(`https://ecomfinal.onrender.com/api/v1/product/product-list/${page}`);
+            const { data } = await axios.get(`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-list/${page}`);
             setLoading(false);
             setProducts([...products, ...data?.products]);
         } catch (error) {
@@ -98,7 +98,7 @@ const HomePage = () => {
     //get filtered products 
     const filterProduct = async () => {
         try {
-            const { data } = await axios.post('https://ecomfinal.onrender.com/api/v1/product/product-filters', { checked, radio });
+            const { data } = await axios.post('https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-filters', { checked, radio });
             setProducts(data?.products);
         } catch (error) {
             console.log(error);
@@ -144,7 +144,7 @@ const HomePage = () => {
                             {products?.map((p) => (
                                 <div key={p._id} className="card m-3" style={{ width: "20rem" }}>
                                     <img
-                                        src={`https://ecomfinal.onrender.com/api/v1/product/product-photo/${p._id}`}
+                                        src={`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-photo/${p._id}`}
                                         className="card-img-top"
                                         alt={p.name}
                                         style={{ width: '100%', height: '300px', objectFit: 'cover', padding: '1px', borderRadius: "4px" }}
