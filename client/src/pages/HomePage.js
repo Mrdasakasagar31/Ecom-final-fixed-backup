@@ -197,7 +197,7 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout/Layout';
 import axios from 'axios';
-import { Checkbox, Radio, Spin } from 'antd';
+import { Checkbox, Radio } from 'antd';
 import { Prices } from '../components/Prices';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/cart';
@@ -349,95 +349,84 @@ const HomePage = () => {
                 {/* Products Section */}
                 <div className="col-md-9 col-sm-12">
                     <h1 className="text-center mt-4">All Products</h1>
-                    <div className="d-flex flex-wrap justify-content-center" style={{ position: 'relative', minHeight: '50vh' }}>
-                        {loading && (
-                            <div 
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    height: '100%',
-                                    position: 'absolute',
-                                    width: '100%',
-                                    zIndex: 10,
-                                }}
-                            >
-                                <Spin size="large" style={{ fontSize: '5em' }} />
-                            </div>
-                        )}
+                    <div className="row">
                         {products?.map((p) => (
-                            <div 
-                                key={p._id} 
-                                className="card m-3" 
-                                style={{
-                                    width: "15rem",  // Adjusted width for smaller size
-                                    borderRadius: "8px",
-                                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", 
-                                    transition: "transform 0.2s, box-shadow 0.2s"
-                                }}
-                                onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-                                onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                            >
-                                <div style={{ padding: '10px' }}>
-                                    <img
-                                        src={`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-photo/${p._id}`}
-                                        alt={p.name}
-                                        style={{
-                                            width: '100%',
-                                            height: '200px',  // Adjusted height for smaller size
-                                            objectFit: 'contain',
-                                            borderRadius: "6px",
-                                        }}
-                                    />
-                                </div>
-                                <div className="card-body" style={{ backgroundColor: '#f9f9f9', padding: '1rem', borderRadius: "0 0 8px 8px" }}>
-                                    <h5 className="card-title" style={{ fontSize: '1.1rem', fontWeight: '600', color: '#333' }}>{p.name}</h5>
-                                    <p className="card-text" style={{ fontSize: '0.9rem', color: '#666', marginBottom: '0.5rem' }}>
-                                        {p.description.substring(0, 50)}...
-                                    </p>
-                                    <h5 className="card-text price" style={{ fontWeight: 'bold', color: '#2d3436' }}>₹{p.price}</h5>
-                                    <div className='d-flex justify-content-between'>
-                                        <button 
-                                            className="btn btn-primary ms-1 mb-2" 
-                                            onClick={() => navigate(`/product/${p.slug}`)}
+                            <div key={p._id} className="col-md-3 col-sm-6 mb-4"> {/* Adjusted to ensure 4 items per row */}
+                                <div 
+                                    className="card" 
+                                    style={{
+                                        width: "18rem",  // Slightly wider cards
+                                        height: "350px", // Shortened height
+                                        borderRadius: "8px",
+                                        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", 
+                                        transition: "transform 0.2s, box-shadow 0.2s"
+                                    }}
+                                    onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                                    onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                                >
+                                    <div style={{ padding: '10px' }}>
+                                        <img
+                                            src={`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-photo/${p._id}`}
+                                            alt={p.name}
                                             style={{
-                                                fontSize: '0.85rem',
-                                                fontWeight: '500',
-                                                backgroundColor: '#0056b3',
-                                                borderColor: '#0056b3',
+                                                width: '100%',
+                                                height: '200px',
+                                                objectFit: 'contain',
+                                                borderRadius: "6px",
                                             }}
-                                            onMouseOver={(e) => e.target.style.backgroundColor = '#004494'}
-                                            onMouseOut={(e) => e.target.style.backgroundColor = '#0056b3'}
-                                        >
-                                            MORE DETAILS
-                                        </button>
-                                        <button 
-                                            className="btn btn-success ms-3 mb-2" 
-                                            onClick={() => {
-                                                setCart([...cart, p]);
-                                                localStorage.setItem("cart", JSON.stringify([...cart, p]));
-                                                toast.success('Item Added to Cart');
-                                            }}
-                                            style={{
-                                                fontSize: '0.85rem',
-                                                fontWeight: '500',
-                                                backgroundColor: '#28a745',
-                                                borderColor: '#28a745',
-                                            }}
-                                            onMouseOver={(e) => e.target.style.backgroundColor = '#218838'}
-                                            onMouseOut={(e) => e.target.style.backgroundColor = '#28a745'}
-                                        >
-                                            ADD TO CART
-                                        </button>
+                                        />
+                                    </div>
+                                    <div className="card-body" style={{ backgroundColor: '#f9f9f9', padding: '1rem', borderRadius: "0 0 8px 8px" }}>
+                                        <h5 className="card-title" style={{ fontSize: '1.1rem', fontWeight: '600', color: '#333' }}>{p.name}</h5>
+                                        <p className="card-text" style={{ fontSize: '0.9rem', color: '#666', marginBottom: '0.5rem' }}>
+                                            {p.description.substring(0, 50)}...
+                                        </p>
+                                        <h5 className="card-text price" style={{ fontWeight: 'bold', color: '#2d3436' }}>₹{p.price}</h5>
+                                        <div className='d-flex justify-content-between'>
+                                            <button 
+                                                className="btn btn-primary ms-1 mb-2" 
+                                                onClick={() => navigate(`/product/${p.slug}`)}
+                                                style={{
+                                                    fontSize: '0.85rem',
+                                                    fontWeight: '500',
+                                                    backgroundColor: '#0056b3',
+                                                    borderColor: '#0056b3',
+                                                }}
+                                                onMouseOver={(e) => e.target.style.backgroundColor = '#004494'}
+                                                onMouseOut={(e) => e.target.style.backgroundColor = '#0056b3'}
+                                            >
+                                                MORE DETAILS
+                                            </button>
+                                            <button 
+                                                className="btn btn-success ms-3 mb-2" 
+                                                onClick={() => {
+                                                    setCart([...cart, p]);
+                                                    localStorage.setItem("cart", JSON.stringify([...cart, p]));
+                                                    toast.success('Item Added to Cart');
+                                                }}
+                                                style={{
+                                                    fontSize: '0.85rem',
+                                                    fontWeight: '500',
+                                                    backgroundColor: '#28a745',
+                                                    borderColor: '#28a745',
+                                                }}
+                                                onMouseOver={(e) => e.target.style.backgroundColor = '#218838'}
+                                                onMouseOut={(e) => e.target.style.backgroundColor = '#28a745'}
+                                            >
+                                                ADD TO CART
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </div>
+
+                    {/* Load More Button */}
                     {products && products.length < total && (
-                        <div className="d-flex justify-content-start mt-4"> {/* Aligned to the left */}
-                            <button 
-                                onClick={() => setPage(page + 1)} 
+                        <div className="d-flex justify-content-start mt-4 mb-5">
+                            <button
+                                onClick={() => setPage(page + 1)}
                                 className="btn btn-outline-dark"
                                 style={{
                                     fontSize: '1rem',
