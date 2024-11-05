@@ -201,6 +201,7 @@ import { Prices } from '../components/Prices';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/cart';
 import toast from 'react-hot-toast';
+import './HomePage.css'; // Ensure to add custom CSS for animations
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -213,11 +214,13 @@ const HomePage = () => {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
 
-    // Fetch categories
+    // Get all categories
     const getAllCategory = async () => {
         try {
             const { data } = await axios.get("https://ecom-final-fixed-backup.onrender.com/api/v1/category/get-category");
-            if (data?.success) setCategories(data?.category);
+            if (data?.success) {
+                setCategories(data?.category);
+            }
         } catch (error) {
             console.log(error);
         }
@@ -228,7 +231,7 @@ const HomePage = () => {
         getTotal();
     }, []);
 
-    // Fetch products based on page
+    // Get all products
     const getAllProducts = async () => {
         try {
             setLoading(true);
@@ -241,6 +244,7 @@ const HomePage = () => {
         }
     };
 
+    // Get total product count
     const getTotal = async () => {
         try {
             const { data } = await axios.get('https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-count');
@@ -255,6 +259,7 @@ const HomePage = () => {
         LoadMore();
     }, [page]);
 
+    // Load more products
     const LoadMore = async () => {
         try {
             setLoading(true);
@@ -262,15 +267,19 @@ const HomePage = () => {
             setLoading(false);
             setProducts([...products, ...data?.products]);
         } catch (error) {
-            console.log(error);
             setLoading(false);
+            console.log(error);
         }
     };
 
+    // Filter by category
     const handleFilter = (value, id) => {
         let all = [...checked];
-        if (value) all.push(id);
-        else all = all.filter((c) => c !== id);
+        if (value) {
+            all.push(id);
+        } else {
+            all = all.filter((c) => c !== id);
+        }
         setChecked(all);
     };
 
@@ -282,6 +291,7 @@ const HomePage = () => {
         if (checked.length || radio.length) filterProduct();
     }, [checked, radio]);
 
+    // Get filtered products
     const filterProduct = async () => {
         try {
             const { data } = await axios.post('https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-filters', { checked, radio });
@@ -326,7 +336,7 @@ const HomePage = () => {
                         )}
                         <div className={`d-flex flex-wrap justify-content-center ${loading ? 'opacity-50' : ''}`}>
                             {products?.map((p) => (
-                                <div key={p._id} className="card m-3 product-card" style={{ width: "20rem" }}>
+                                <div key={p._id} className="card m-3 load-animation" style={{ width: "20rem" }}>
                                     <img
                                         src={`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-photo/${p._id}`}
                                         className="card-img-top"
@@ -336,13 +346,15 @@ const HomePage = () => {
                                         onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
                                     />
                                     <hr style={{ margin: '0px', color: "gray" }} />
-                                    <div className="card-body" style={{ backgroundColor: 'orange', borderRadius: "0 0 3px 3px" }}>
+                                    <div className="card-body" style={{ backgroundColor: 'white', borderRadius: "0 0 3px 3px" }}>
                                         <h5 className="card-title">{p.name}</h5>
-                                        <p className="card-text">{p.description.substring(0, 50)}...</p>
+                                        <p className="card-text">
+                                            {p.description.substring(0, 50)}...
+                                        </p>
                                         <h5 className="card-text" style={{ fontWeight: 'bold', color: 'black' }}>₹{p.price}</h5>
                                         <div className='d-flex justify-content-between'>
-                                            <button className="btn btn-primary ms-1 mb-2" onClick={() => navigate(`/product/${p.slug}`)}>MORE DETAILS</button>
-                                            <button className="btn btn-success ms-3 mb-2" onClick={() => {
+                                            <button className="btn btn-primary ms-1 mb-2" style={{ backgroundColor: 'navy', borderColor: 'navy' }} onClick={() => navigate(`/product/${p.slug}`)}>MORE DETAILS</button>
+                                            <button className="btn btn-success ms-3 mb-2" style={{ backgroundColor: 'green', borderColor: 'green' }} onClick={() => {
                                                 setCart([...cart, p]);
                                                 localStorage.setItem("cart", JSON.stringify([...cart, p]));
                                                 toast.success('Item Added to Cart');
