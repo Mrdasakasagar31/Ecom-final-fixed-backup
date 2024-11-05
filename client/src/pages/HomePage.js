@@ -370,7 +370,7 @@ const HomePage = () => {
                                 key={p._id} 
                                 className="card m-3" 
                                 style={{
-                                    width: "18rem", 
+                                    width: "15rem",  // Adjusted width for smaller size
                                     borderRadius: "8px",
                                     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", 
                                     transition: "transform 0.2s, box-shadow 0.2s"
@@ -384,7 +384,7 @@ const HomePage = () => {
                                         alt={p.name}
                                         style={{
                                             width: '100%',
-                                            height: '220px',
+                                            height: '200px',  // Adjusted height for smaller size
                                             objectFit: 'contain',
                                             borderRadius: "6px",
                                         }}
@@ -434,13 +434,11 @@ const HomePage = () => {
                             </div>
                         ))}
                     </div>
-
-                    {/* Load More Button */}
                     {products && products.length < total && (
-                        <div className="d-flex justify-content-center">
+                        <div className="d-flex justify-content-start mt-4"> {/* Aligned to the left */}
                             <button 
                                 onClick={() => setPage(page + 1)} 
-                                className="btn btn-outline-dark mt-4"
+                                className="btn btn-outline-dark"
                                 style={{
                                     fontSize: '1rem',
                                     fontWeight: '600',
@@ -460,5 +458,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-
