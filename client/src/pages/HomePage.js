@@ -141,36 +141,47 @@ const HomePage = () => {
                             </div>
                         )}
                         <div className={`d-flex flex-wrap justify-content-center ${loading ? 'opacity-50' : ''}`}>
-                            {products?.map((p) => (
-                                <div key={p._id} className="card m-3" style={{ width: "20rem" }}>
-                                    <img
-                                        src={`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-photo/${p._id}`}
-                                        className="card-img-top"
-                                        alt={p.name}
-                                        style={{ width: '100%', height: '300px', objectFit: 'cover', padding: '1px', borderRadius: "4px" }}
-                                        onMouseOver={(e) => e.target.style.transform = 'scale(0.985)'}
-                                        onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
-                                    />
-                                    <hr style={{ margin: '0px', color: "gray" }} />
-                                    <div className="card-body" style={{ backgroundColor: 'orange', borderRadius: "0 0 3px 3px" }}>
-                                        <h5 className="card-title">{p.name}</h5>
-                                        <p className="card-text">
-                                            {p.description.substring(0, 50)}...
-                                        </p>
-                                        <h5 className="card-text" style={{ fontWeight: 'bold', color: 'black' }}>₹{p.price}</h5>
+                          {products?.map((p) => (
+    <div key={p._id} className="card m-3" style={{ width: "18rem" }}>
+        <img
+            src={`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-photo/${p._id}`}
+            className="card-img-top"
+            alt={p.name}
+            style={{
+                width: '100%',
+                height: '250px', // Reduced height for the image
+                objectFit: 'cover',
+                padding: '1px',
+                borderRadius: "4px"
+            }}
+            onMouseOver={(e) => e.target.style.transform = 'scale(0.985)'}
+            onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+        />
+        <hr style={{ margin: '0px', color: "gray" }} />
+        <div className="card-body" style={{
+            backgroundColor: 'orange',
+            borderRadius: "0 0 3px 3px",
+            padding: '15px' // Adjusted padding for a compact layout
+        }}>
+            <h5 className="card-title">{p.name}</h5>
+            <p className="card-text">
+                {p.description.substring(0, 50)}...
+            </p>
+            <h5 className="card-text" style={{ fontWeight: 'bold', color: 'black' }}>₹{p.price}</h5>
 
-                                        <div className='d-flex justify-content-between'>
-                                            <button className="btn btn-primary ms-1 mb-2" onClick={() => navigate(`/product/${p.slug}`)}>MORE DETAILS</button>
+            <div className='d-flex justify-content-between'>
+                <button className="btn btn-primary ms-1 mb-2" onClick={() => navigate(`/product/${p.slug}`)}>MORE DETAILS</button>
 
-                                            <button className="btn btn-success ms-3 mb-2" onClick={() => {
-                                                setCart([...cart, p]);
-                                                localStorage.setItem("cart", JSON.stringify([...cart, p]));
-                                                toast.success('Item Added to Cart');
-                                            }}>ADD TO CART</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                <button className="btn btn-success ms-3 mb-2" onClick={() => {
+                    setCart([...cart, p]);
+                    localStorage.setItem("cart", JSON.stringify([...cart, p]));
+                    toast.success('Item Added to Cart');
+                }}>ADD TO CART</button>
+            </div>
+        </div>
+    </div>
+))}
+
                         </div>
                     </div>
                     <div>
