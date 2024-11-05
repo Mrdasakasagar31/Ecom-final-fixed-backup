@@ -197,12 +197,12 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout/Layout';
 import axios from 'axios';
-import { Checkbox, Radio } from 'antd';
 import { Prices } from '../components/Prices';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/cart';
 import toast from 'react-hot-toast';
 import './HomePage.css';
+import { Checkbox, Radio, Spin } from 'antd';
 
 const HomePage = () => {
     const navigate = useNavigate();
