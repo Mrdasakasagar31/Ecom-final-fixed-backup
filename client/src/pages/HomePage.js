@@ -214,232 +214,130 @@ const HomePage = () => {
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
-    
+
+    // Fetch categories and total product count
+    useEffect(() => {
+        getAllCategory();
+        getTotal();
+    }, []);
+
+    // Fetch all products based on page
+    useEffect(() => {
+        if (page === 1) {
+            getAllProducts();
+        } else {
+            loadMoreProducts();
+        }
+    }, [page]);
 
     const getAllCategory = async () => {
         try {
             const { data } = await axios.get("https://ecom-final-fixed-backup.onrender.com/api/v1/category/get-category");
-            if (data?.success) {
-                setCategories(data?.category);
-            }
+            setCategories(data?.category || []);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
     const getAllProducts = async () => {
+        setLoading(true);
         try {
-            setLoading(true);
             const { data } = await axios.get(`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-list/${page}`);
+            setProducts(data?.products || []);
+        } finally {
             setLoading(false);
-            setProducts(data.products);
-        } catch (error) {
-            setLoading(false);
-            console.log(error);
         }
     };
 
     const getTotal = async () => {
         try {
             const { data } = await axios.get('https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-count');
-            setTotal(data?.total);
+            setTotal(data?.total || 0);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
-    const LoadMore = async () => {
+    const loadMoreProducts = async () => {
+        setLoading(true);
         try {
-            setLoading(true);
             const { data } = await axios.get(`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-list/${page}`);
-            setLoading(false);
-            setProducts([...products, ...data?.products]);
-        } catch (error) {
-            console.log(error);
+            setProducts((prev) => [...prev, ...(data?.products || [])]);
+        } finally {
             setLoading(false);
         }
     };
 
-    const handleFilter = (value, id) => {
-        let all = [...checked];
-        if (value) {
-            all.push(id);
-        } else {
-            all = all.filter((c) => c !== id);
-        }
-        setChecked(all);
+    const handleFilter = (checked, id) => {
+        const updatedChecked = checked ? [...checked, id] : checked.filter((c) => c !== id);
+        setChecked(updatedChecked);
     };
 
-    useEffect(() => {
-        getAllCategory();
-        getTotal();
-    }, []);
-
-    useEffect(() => {
-        if (page === 1) return;
-        LoadMore();
-    }, [page]);
-
-    useEffect(() => {
-        if (!checked.length || !radio.length) getAllProducts();
-    }, [checked.length, radio.length]);
-
-    useEffect(() => {
-        if (checked.length || radio.length) filterProduct();
-    }, [checked, radio]);
-
-    const filterProduct = async () => {
+    const filterProducts = async () => {
+        setLoading(true);
         try {
             const { data } = await axios.post('https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-filters', { checked, radio });
-            setProducts(data?.products);
-        } catch (error) {
-            console.log(error);
+            setProducts(data?.products || []);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <Layout title={"Sagar's Ecom App - Shop Now"}>
+        <Layout title="Sagar's Ecom App - Shop Now">
             <div className="container-fluid row mx-auto">
                 {/* Filter Section */}
                 <div className="col-md-2 col-sm-12">
                     <h4 className="text-center mt-4" style={{ color: "maroon" }}>Filter By Category</h4>
                     <hr />
                     <div className="d-flex flex-column">
-                        {categories?.map((c) => (
-                            <Checkbox 
-                                key={c._id} 
-                                onChange={(e) => handleFilter(e.target.checked, c._id)} 
-                                style={{ fontWeight: 'bold' }}
-                            >
-                                {c.name}
-                            </Checkbox>
+                        {categories.map((c) => (
+                            <Checkbox key={c._id} onChange={(e) => handleFilter(e.target.checked, c._id)}>{c.name}</Checkbox>
                         ))}
                     </div>
-
-                    {/* Filter by price */}
-                    <h4 className="text-center mt-4" style={{ color: "maroon", marginLeft: "-43px" }}>Filter By Price</h4>
+                    <h4 className="text-center mt-4" style={{ color: "maroon" }}>Filter By Price</h4>
                     <hr />
-                    <div className="d-flex flex-column">
-                        <Radio.Group onChange={e => setRadio(e.target.value)}>
-                            {Prices?.map(p => (
-                                <div key={p._id}>
-                                    <Radio value={p.array} style={{ fontWeight: 'bold' }}>
-                                        {p.name}
-                                    </Radio>
-                                </div>
-                            ))}
-                        </Radio.Group>
-                    </div>
-                    <div className="d-flex mt-3 col-sm-12">
-                        <div 
-                            className="btn btn-danger" 
-                            onClick={() => window.location.reload()}
-                            style={{
-                                fontSize: '0.9rem',
-                                fontWeight: '600',
-                                padding: '0.75rem 1.5rem',
-                                backgroundColor: '#f44336',
-                                borderColor: '#f44336',
-                            }}
-                        >
-                            RESET FILTERS
-                        </div>
-                    </div>
+                    <Radio.Group onChange={(e) => setRadio(e.target.value)}>
+                        {Prices.map((p) => (
+                            <Radio key={p._id} value={p.array}>{p.name}</Radio>
+                        ))}
+                    </Radio.Group>
+                    <button className="btn btn-danger mt-3" onClick={() => window.location.reload()}>RESET FILTERS</button>
                 </div>
 
-                {/* Products Section */}
+                {/* Product Display Section */}
                 <div className="col-md-9 col-sm-12">
                     <h1 className="text-center mt-4">All Products</h1>
-                    <div className="row">
-                        {products?.map((p) => (
-                            <div key={p._id} className="col-md-3 col-sm-6 mb-4"> {/* Adjusted to ensure 4 items per row */}
-                                <div 
-                                    className="card" 
-                                    style={{
-                                        width: "18rem",  // Slightly wider cards
-                                        height: "350px", // Shortened height
-                                        borderRadius: "8px",
-                                        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", 
-                                        transition: "transform 0.2s, box-shadow 0.2s"
-                                    }}
-                                    onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-                                    onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                                >
-                                    <div style={{ padding: '10px' }}>
-                                        <img
-                                            src={`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-photo/${p._id}`}
-                                            alt={p.name}
-                                            style={{
-                                                width: '100%',
-                                                height: '200px',
-                                                objectFit: 'contain',
-                                                borderRadius: "6px",
-                                            }}
-                                        />
-                                    </div>
+                    <div className="d-flex flex-wrap justify-content-center">
+                        {loading && page === 1 ? (
+                            Array.from({ length: 6 }).map((_, index) => (
+                                <div key={index} className="skeleton-card m-3"></div>
+                            ))
+                        ) : (
+                            products.map((p) => (
+                                <div key={p._id} className="card m-3" style={{ width: "18rem", borderRadius: "8px", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)" }}>
+                                    <img src={`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-photo/${p._id}`} alt={p.name} style={{ objectFit: 'contain', height: '220px', width: '100%' }} />
                                     <div className="card-body" style={{ backgroundColor: '#f9f9f9', padding: '1rem', borderRadius: "0 0 8px 8px" }}>
-                                        <h5 className="card-title" style={{ fontSize: '1.1rem', fontWeight: '600', color: '#333' }}>{p.name}</h5>
-                                        <p className="card-text" style={{ fontSize: '0.9rem', color: '#666', marginBottom: '0.5rem' }}>
-                                            {p.description.substring(0, 50)}...
-                                        </p>
-                                        <h5 className="card-text price" style={{ fontWeight: 'bold', color: '#2d3436' }}>₹{p.price}</h5>
-                                        <div className='d-flex justify-content-between'>
-                                            <button 
-                                                className="btn btn-primary ms-1 mb-2" 
-                                                onClick={() => navigate(`/product/${p.slug}`)}
-                                                style={{
-                                                    fontSize: '0.85rem',
-                                                    fontWeight: '500',
-                                                    backgroundColor: '#0056b3',
-                                                    borderColor: '#0056b3',
-                                                }}
-                                                onMouseOver={(e) => e.target.style.backgroundColor = '#004494'}
-                                                onMouseOut={(e) => e.target.style.backgroundColor = '#0056b3'}
-                                            >
-                                                MORE DETAILS
-                                            </button>
-                                            <button 
-                                                className="btn btn-success ms-3 mb-2" 
-                                                onClick={() => {
-                                                    setCart([...cart, p]);
-                                                    localStorage.setItem("cart", JSON.stringify([...cart, p]));
-                                                    toast.success('Item Added to Cart');
-                                                }}
-                                                style={{
-                                                    fontSize: '0.85rem',
-                                                    fontWeight: '500',
-                                                    backgroundColor: '#28a745',
-                                                    borderColor: '#28a745',
-                                                }}
-                                                onMouseOver={(e) => e.target.style.backgroundColor = '#218838'}
-                                                onMouseOut={(e) => e.target.style.backgroundColor = '#28a745'}
-                                            >
-                                                ADD TO CART
-                                            </button>
+                                        <h5 className="card-title">{p.name}</h5>
+                                        <p className="card-text">{p.description.substring(0, 50)}...</p>
+                                        <h5 className="card-text">₹{p.price}</h5>
+                                        <div className="d-flex justify-content-between">
+                                            <button className="btn btn-primary" onClick={() => navigate(`/product/${p.slug}`)}>MORE DETAILS</button>
+                                            <button className="btn btn-success" onClick={() => {
+                                                setCart([...cart, p]);
+                                                localStorage.setItem("cart", JSON.stringify([...cart, p]));
+                                                toast.success('Item Added to Cart');
+                                            }}>ADD TO CART</button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))
+                        )}
                     </div>
-
-                    {/* Load More Button */}
-                    {products && products.length < total && (
-                        <div className="d-flex justify-content-start mt-4 mb-5">
-                            <button
-                                onClick={() => setPage(page + 1)}
-                                className="btn btn-outline-dark"
-                                style={{
-                                    fontSize: '1rem',
-                                    fontWeight: '600',
-                                    padding: '0.5rem 2rem',
-                                    backgroundColor: '#ffffff',
-                                    borderColor: '#000000',
-                                }}
-                            >
-                                {loading ? 'Loading More...' : 'Load More'}
-                            </button>
-                        </div>
+                    {products.length < total && (
+                        <button className="btn btn-dark mt-4" onClick={() => setPage((prev) => prev + 1)}>
+                            {loading ? "Loading..." : "Load More"}
+                        </button>
                     )}
                 </div>
             </div>
@@ -448,3 +346,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
