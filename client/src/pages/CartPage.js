@@ -127,7 +127,7 @@ const CartPage = () => {
                             <div className="row mb-4 m-1 p-3 card flex-md-row flex-column align-items-center" key={p._id} style={{ backgroundColor: "#F2F2F2" }}>
                                 <div className="col-md-4 mb-4 mb-md-0">
                                     <img
-                                        src={`https://ecomfinal.onrender.com/api/v1/product/product-photo/${p._id}`}
+                                        src={`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-photo/${p._id}`}
                                         className="card-img-top mt-3 mb-3"
                                         alt={p.name}
                                         style={{ maxWidth: "100%", borderRadius: "4px", height: "auto", transition: "transform 0.2s ease-in-out" }}
