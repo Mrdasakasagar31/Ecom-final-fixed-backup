@@ -33,22 +33,41 @@ const CartPage = () => {
     };
 
 
-    //total price
+    // //total price
+    // const totalPrice = () => {
+    //     try {
+    //         let total = 0;
+    //         cart?.map((item) => {
+    //             total = total + item.price;
+    //             return null; // Add a return statement here
+    //         });
+    //         return total.toLocaleString("en-IN", {
+    //             style: "currency",
+    //             currency: "INR",
+    //         });
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
+
+        // //total price
     const totalPrice = () => {
-        try {
-            let total = 0;
-            cart?.map((item) => {
-                total = total + item.price;
-                return null; // Add a return statement here
-            });
-            return total.toLocaleString("en-IN", {
-                style: "currency",
-                currency: "INR",
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    try {
+        let total = 0;
+        cart?.forEach((item) => { 
+            total += item.price * (item.quantity || 1); // Ensure quantity is considered
+        });
+        return total.toLocaleString("en-IN", {
+            style: "currency",
+            currency: "INR",
+        });
+    } catch (error) {
+        console.log(error);
+        return "₹0.00"; // Return a default value if error occurs
+    }
+};
+
+    
     //detele item
     const removeCartItem = (pid) => {
         try {
