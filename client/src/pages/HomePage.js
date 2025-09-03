@@ -200,8 +200,6 @@
 
 
 
-
-
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout/Layout';
 import axios from 'axios';
@@ -285,7 +283,7 @@ const ProductCard = ({ product, navigate, cart, setCart }) => (
         }}
     >
         <img
-            src={`https://ecomfinal.onrender.com/api/v1/product/product-photo/${product._id}`}
+            src={`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-photo/${product._id}`}
             className="card-img-top"
             alt={product.name}
             style={{ 
@@ -347,7 +345,7 @@ const HomePage = () => {
     //get all categories
     const getAllCategory = async () => {
         try {
-            const { data } = await axios.get("https://ecomfinal.onrender.com/api/v1/category/get-category");
+            const { data } = await axios.get("https://ecom-final-fixed-backup.onrender.com/api/v1/category/get-category");
             if (data?.success) {
                 setCategories(data?.category);
             }
@@ -365,7 +363,7 @@ const HomePage = () => {
     const getAllProducts = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(`https://ecomfinal.onrender.com/api/v1/product/product-list/${page}`);
+            const { data } = await axios.get(`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-list/${page}`);
             setLoading(false);
             setInitialLoading(false);
             setProducts(data.products);
@@ -379,7 +377,7 @@ const HomePage = () => {
     //getTotal Count  
     const getTotal = async () => {
         try {
-            const { data } = await axios.get('https://ecomfinal.onrender.com/api/v1/product/product-count');
+            const { data } = await axios.get('https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-count');
             setTotal(data?.total);
         } catch (error) {
             console.log(error);
@@ -395,7 +393,7 @@ const HomePage = () => {
     const LoadMore = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(`https://ecomfinal.onrender.com/api/v1/product/product-list/${page}`);
+            const { data } = await axios.get(`https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-list/${page}`);
             setLoading(false);
             setProducts([...products, ...data?.products]);
         } catch (error) {
@@ -427,7 +425,7 @@ const HomePage = () => {
     const filterProduct = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.post('https://ecomfinal.onrender.com/api/v1/product/product-filters', { checked, radio });
+            const { data } = await axios.post('https://ecom-final-fixed-backup.onrender.com/api/v1/product/product-filters', { checked, radio });
             setProducts(data?.products);
             setLoading(false);
         } catch (error) {
