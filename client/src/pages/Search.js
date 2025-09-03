@@ -59,7 +59,6 @@
 
 // export default Search;
 
-
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout/Layout';
 import { useSearch } from '../context/ssearch';
@@ -75,7 +74,6 @@ const Search = () => {
 
   useEffect(() => {
     if (values) {
-      // small delay to show skeleton animation
       const timer = setTimeout(() => setLoading(false), 1000);
       return () => clearTimeout(timer);
     }
@@ -88,7 +86,7 @@ const Search = () => {
           <h1 className="text-center mt-3">Search Results</h1>
           <h6
             className="text-center text-danger"
-            style={{ fontSize: "20px" }}
+            style={{ fontSize: "18px" }}
           >
             {values?.results.length < 1
               ? "No Products Found"
@@ -97,15 +95,14 @@ const Search = () => {
 
           <div className="d-flex flex-wrap justify-content-center mt-4">
             {loading
-              ? // 🔹 Skeleton loader (same as HomePage)
-                Array(6)
+              ? Array(6)
                   .fill(0)
                   .map((_, i) => (
                     <div
                       key={i}
-                      className="card m-2"
+                      className="card m-3 p-2"
                       style={{
-                        width: "21rem",
+                        width: "18rem", // smaller card width
                         maxWidth: "100%",
                         backgroundColor: "orange",
                         borderRadius: "10px",
@@ -115,7 +112,7 @@ const Search = () => {
                         className="skeleton-img"
                         style={{
                           width: "100%",
-                          height: "300px",
+                          height: "220px", // reduced image height
                           background:
                             "linear-gradient(90deg, #ddd, #eee, #ddd)",
                           backgroundSize: "200% 100%",
@@ -124,13 +121,13 @@ const Search = () => {
                           borderTopRightRadius: "5px",
                         }}
                       />
-                      <div className="card-body">
+                      <div className="card-body p-2">
                         <div
                           className="skeleton-line"
                           style={{
                             width: "70%",
-                            height: "20px",
-                            margin: "10px 0",
+                            height: "18px",
+                            margin: "8px 0",
                             background:
                               "linear-gradient(90deg, #ddd, #eee, #ddd)",
                             backgroundSize: "200% 100%",
@@ -141,8 +138,8 @@ const Search = () => {
                           className="skeleton-line"
                           style={{
                             width: "50%",
-                            height: "15px",
-                            margin: "10px 0",
+                            height: "14px",
+                            margin: "8px 0",
                             background:
                               "linear-gradient(90deg, #ddd, #eee, #ddd)",
                             backgroundSize: "200% 100%",
@@ -153,8 +150,8 @@ const Search = () => {
                           className="skeleton-line"
                           style={{
                             width: "40%",
-                            height: "20px",
-                            margin: "10px 0",
+                            height: "16px",
+                            margin: "8px 0",
                             background:
                               "linear-gradient(90deg, #ddd, #eee, #ddd)",
                             backgroundSize: "200% 100%",
@@ -164,15 +161,15 @@ const Search = () => {
                       </div>
                     </div>
                   ))
-              : // 🔹 Actual product cards
-                values?.results.map((p) => (
+              : values?.results.map((p) => (
                   <div
                     key={p._id}
-                    className="card m-2"
+                    className="card m-3 p-2"
                     style={{
-                      width: "21rem",
+                      width: "18rem", // smaller width
                       maxWidth: "100%",
                       backgroundColor: "orange",
+                      borderRadius: "10px",
                     }}
                   >
                     <img
@@ -181,7 +178,7 @@ const Search = () => {
                       alt={p.name}
                       style={{
                         width: "100%",
-                        height: "300px",
+                        height: "220px", // reduced height
                         objectFit: "cover",
                         borderTopRightRadius: "5px",
                         borderTopLeftRadius: "5px",
@@ -195,12 +192,12 @@ const Search = () => {
                       }
                     />
                     <hr style={{ margin: "0px", color: "2px solid gray" }} />
-                    <div className="card-body">
-                      <h5 className="card-title">{p.name}</h5>
-                      <p className="card-text">
-                        {p.description.substring(0, 30)}...
+                    <div className="card-body p-2">
+                      <h6 className="card-title">{p.name}</h6>
+                      <p className="card-text" style={{ fontSize: "14px" }}>
+                        {p.description.substring(0, 40)}...
                       </p>
-                      <h5
+                      <h6
                         className="card-text"
                         style={{
                           fontWeight: "bold",
@@ -208,15 +205,15 @@ const Search = () => {
                         }}
                       >
                         ₹{p.price}
-                      </h5>
+                      </h6>
                       <button
-                        className="btn btn-primary mb-2 mt-1"
+                        className="btn btn-primary btn-sm mb-2 mt-1"
                         onClick={() => navigate(`/product/${p.slug}`)}
                       >
                         MORE DETAILS
                       </button>
                       <button
-                        className="btn btn-success ms-2 mb-2 mt-1"
+                        className="btn btn-success btn-sm ms-2 mb-2 mt-1"
                         onClick={() => {
                           setCart([...cart, p]);
                           localStorage.setItem(
